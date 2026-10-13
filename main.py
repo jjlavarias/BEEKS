@@ -1,24 +1,45 @@
-# Resources:
-# https://www.youtube.com/watch?v=aL21Y-u0SRs
-# https://www.youtube.com/watch?v=HYcXgN9HaTM
-# https://www.youtube.com/watch?v=4u81xU7BIOc
 
-from data_loader import load_iris_data, prepare_features_and_target
-from model_eval import evaluate_kfold, print_evaluation_reports
-from visualization import plot_feature_scatter, plot_class_distribution, show_plots
+from data_loader import load_data
+from logistic_regression import (
+    create_model,
+    get_parameters
+)
+from model_eval import evaluate_model
+from visualization import (
+    plot_class_distribution,
+    plot_confusion_matrix,
+    plot_roc_curves,
+    show_plots
+)
 
 def main():
-    # 1. Load Data
-    df, target_names = load_iris_data()
-    x, y = prepare_features_and_target(df)
 
-    # 2. Evaluate Model
-    scores, y_true, y_pred = evaluate_kfold(x, y, n_splits=5, random_state=11)
-    print_evaluation_reports(scores, y_true, y_pred, target_names)
+    # 1. LOAD DATA
+    X, y, class_names = load_data()
 
-    # 3. Render Visualizations
-    plot_feature_scatter(df, target_names)
-    plot_class_distribution(df, target_names)
+    # 2. CREATE LOGISTIC REGRESSION
+    model = create_model()
+    parameters = get_parameters()
+
+    # 3. EVALUATE MODEL
+    results = evaluate_model(
+        X,
+        y,
+        model,
+        parameters,
+        class_names
+    )
+
+    # 4. DISPLAY GRAPHS
+    plot_class_distribution(y, class_names)
+    plot_confusion_matrix(
+        results["confusion_matrix"],
+        class_names
+    )
+    plot_roc_curves(
+        results["roc_curves"],
+        class_names
+    )
     show_plots()
 
 if __name__ == "__main__":

@@ -1,15 +1,17 @@
-import pandas as pd
 from sklearn.datasets import load_iris
 
-def load_iris_data():
-    """Loads raw Iris dataset and returns a clean DataFrame and target names."""
-    iris = load_iris()
-    df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
-    df['species'] = iris.target
-    return df, iris.target_names
+def load_data():
 
-def prepare_features_and_target(df):
-    """Extracts chosen feature matrix (X) and target vector (y)."""
-    x = df[['sepal length (cm)', 'sepal width (cm)']]
-    y = df['species']
-    return x, y
+    # Load Iris dataset
+    iris = load_iris(as_frame=True)
+
+    # X = measurements used for predictions
+    X = iris.data
+
+    # y = correct classification labels
+    y = iris.target
+
+    # Names of the classifications
+    class_names = iris.target_names
+
+    return X, y, class_names

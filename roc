@@ -1,8 +1,6 @@
 
 import numpy as np
-
 from sklearn.metrics import roc_curve, auc, roc_auc_score
-
 
 def calculate_roc(y_true, y_prob, classes):
 

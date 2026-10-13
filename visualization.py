@@ -1,28 +1,79 @@
-from matplotlib import pyplot as plt
+
+import matplotlib.pyplot as plt
 import seaborn as sns
 
-def plot_feature_scatter(df, target_names):
-    """Plots Sepal Length vs Sepal Width colored by Iris species."""
-    plt.figure(figsize=(8, 5))
-    scatter = plt.scatter(
-        df['sepal length (cm)'],
-        df['sepal width (cm)'],
-        c=df['species'],
-        cmap='viridis',
-        edgecolor='k'
+
+# 1. CLASS DISTRIBUTION
+def plot_class_distribution(y, class_names):
+
+    plt.figure(figsize=(7, 5))
+
+    sns.countplot(x=y, color="steelblue")
+
+    plt.title("Class Distribution")
+    plt.xlabel("Class")
+    plt.ylabel("Number of Samples")
+    plt.xticks(
+        ticks=range(len(class_names)),
+        labels=class_names
     )
-    plt.xlabel('Sepal Length (cm)')
-    plt.ylabel('Sepal Width (cm)')
-    plt.title('Sepal Length vs Sepal Width by Iris Species')
-    plt.legend(handles=scatter.legend_elements()[0], labels=list(target_names))
 
-def plot_class_distribution(df, target_names):
-    """Plots count distribution across Iris species classes."""
-    plt.figure(figsize=(6, 4))
-    sns.countplot(x='species', data=df)
-    plt.title('Count of Iris Species Classes')
-    plt.xticks(ticks=[0, 1, 2], labels=target_names)
+    plt.tight_layout()
 
+
+# 2. CONFUSION MATRIX
+def plot_confusion_matrix(cm, class_names):
+
+    plt.figure(figsize=(7, 5))
+
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        xticklabels=class_names,
+        yticklabels=class_names
+    )
+
+    plt.title("Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+
+    plt.tight_layout()
+
+
+# 3. ROC CURVES
+def plot_roc_curves(roc_curves, class_names):
+
+    plt.figure(figsize=(7, 5))
+
+    for class_label, values in roc_curves.items():
+
+        fpr, tpr, auc_score = values
+
+        plt.plot(
+            fpr,
+            tpr,
+            label=f"{class_names[class_label]} (AUC = {auc_score:.3f})"
+        )
+
+    # Random classifier reference line
+    plt.plot(
+        [0, 1],
+        [0, 1],
+        linestyle="--",
+        color="gray",
+        label="Random Classifier"
+    )
+
+    plt.title("ROC Curves")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+
+    plt.legend()
+    plt.tight_layout()
+
+
+# 4. DISPLAY ALL GRAPHS
 def show_plots():
-    """Renders all initialized plots."""
     plt.show()
